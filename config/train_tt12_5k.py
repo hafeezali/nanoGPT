@@ -1,7 +1,7 @@
 # train a miniature character-level shakespeare model
 # good for debugging and playing on macbooks and such
 
-out_dir = 'out-tt2_5k'
+out_dir = 'out-tt12_5k'
 eval_interval = 250 # keep frequent because we'll overfit
 eval_iters = 200
 log_interval = 10 # don't print too too often
@@ -10,10 +10,10 @@ log_interval = 10 # don't print too too often
 always_save_checkpoint = False
 
 wandb_log = False # override via command line if you like
-wandb_project = 'tt2_5k-char'
+wandb_project = 'tt12_5k-char'
 wandb_run_name = 'mini-gpt'
 
-dataset = 'tt_2_5k'
+dataset = 'tt_12_5k'
 gradient_accumulation_steps = 1
 batch_size = 64
 block_size = 256 # context of up to 256 previous characters
