@@ -1,0 +1,6 @@
+length of dataset in characters: 835,085
+all the unique characters: 	
+ !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~ £§©«­®°±´·»¿ÂÅÍ×ÜàáâäçèéëíñóôöúüčęńřśŠΔγπ׳​‍–—‘’“”•…′″›€™→⇓√∼≥☀★☆♀⛔➕⬆のをコトメン件投稿️ﾠ🐎👍📢😉😊🙂
+vocab size: 187
+train has 751,576 tokens
+val has 83,509 tokens

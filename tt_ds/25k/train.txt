@@ -1,0 +1,588 @@
+Overriding config with config/train_tt25k.py:
+# train a miniature character-level shakespeare model
+# good for debugging and playing on macbooks and such
+
+out_dir = 'out-tt25k'
+eval_interval = 250 # keep frequent because we'll overfit
+eval_iters = 200
+log_interval = 10 # don't print too too often
+
+# we expect to overfit on this small dataset, so only save when val improves
+always_save_checkpoint = False
+
+wandb_log = False # override via command line if you like
+wandb_project = 'tt25k-char'
+wandb_run_name = 'mini-gpt'
+
+dataset = 'tt_25k'
+gradient_accumulation_steps = 1
+batch_size = 64
+block_size = 256 # context of up to 256 previous characters
+
+# baby GPT model :)
+n_layer = 10
+n_head = 6
+n_embd = 384
+dropout = 0.2
+
+learning_rate = 1e-3 # with baby networks can afford to go a bit higher
+max_iters = 5000
+lr_decay_iters = 5000 # make equal to max_iters usually
+min_lr = 1e-4 # learning_rate / 10 usually
+beta2 = 0.99 # make a bit bigger because number of tokens per iter is small
+
+warmup_iters = 100 # not super necessary potentially
+
+# on macbook also add
+# device = 'cpu'  # run on cpu only
+# compile = False # do not torch compile the model
+
+tokens per iteration will be: 16,384
+found vocab_size = 619 (inside data/tt_25k/meta.pkl)
+Initializing a new model from scratch
+number of parameters: 17.94M
+num decayed parameter tensors: 42, with 18,030,720 parameters
+num non-decayed parameter tensors: 21, with 8,064 parameters
+using fused AdamW: True
+compiling the model... (takes a ~minute)
+step 0: train loss 6.4653, val loss 6.4672
+iter 0: loss 6.4868, time 34230.57ms, mfu -100.00%
+iter 10: loss 4.5662, time 192.69ms, mfu 3.26%
+iter 20: loss 3.8265, time 195.65ms, mfu 3.25%
+iter 30: loss 3.1332, time 197.70ms, mfu 3.24%
+iter 40: loss 2.9416, time 196.76ms, mfu 3.24%
+iter 50: loss 2.7729, time 195.41ms, mfu 3.23%
+iter 60: loss 2.6968, time 201.24ms, mfu 3.22%
+iter 70: loss 2.6500, time 199.93ms, mfu 3.21%
+iter 80: loss 2.6164, time 199.80ms, mfu 3.21%
+iter 90: loss 2.6538, time 203.31ms, mfu 3.19%
+iter 100: loss 2.6076, time 196.60ms, mfu 3.19%
+iter 110: loss 2.6244, time 201.37ms, mfu 3.19%
+iter 120: loss 2.6076, time 197.15ms, mfu 3.19%
+iter 130: loss 2.6425, time 198.57ms, mfu 3.18%
+iter 140: loss 2.5876, time 195.34ms, mfu 3.19%
+iter 150: loss 2.6022, time 194.13ms, mfu 3.19%
+iter 160: loss 2.6136, time 192.71ms, mfu 3.20%
+iter 170: loss 2.5806, time 197.03ms, mfu 3.20%
+iter 180: loss 2.5754, time 192.81ms, mfu 3.20%
+iter 190: loss 2.5392, time 192.14ms, mfu 3.21%
+iter 200: loss 2.5137, time 192.45ms, mfu 3.21%
+iter 210: loss 2.5397, time 196.08ms, mfu 3.21%
+iter 220: loss 2.5088, time 192.44ms, mfu 3.22%
+iter 230: loss 2.4661, time 191.36ms, mfu 3.22%
+iter 240: loss 2.4022, time 188.46ms, mfu 3.23%
+step 250: train loss 2.3353, val loss 2.3583
+saving checkpoint to out-tt25k
+iter 250: loss 2.4009, time 22716.56ms, mfu 2.91%
+iter 260: loss 2.3383, time 192.66ms, mfu 2.95%
+iter 270: loss 2.3989, time 189.56ms, mfu 2.98%
+iter 280: loss 2.3410, time 192.96ms, mfu 3.01%
+iter 290: loss 2.2586, time 188.86ms, mfu 3.04%
+iter 300: loss 2.2810, time 188.08ms, mfu 3.07%
+iter 310: loss 2.3007, time 193.96ms, mfu 3.09%
+iter 320: loss 2.2588, time 192.70ms, mfu 3.10%
+iter 330: loss 2.1931, time 192.34ms, mfu 3.12%
+iter 340: loss 2.1849, time 191.31ms, mfu 3.14%
+iter 350: loss 2.1651, time 192.61ms, mfu 3.15%
+iter 360: loss 2.2135, time 192.40ms, mfu 3.16%
+iter 370: loss 2.1265, time 189.62ms, mfu 3.17%
+iter 380: loss 2.1230, time 195.91ms, mfu 3.18%
+iter 390: loss 2.1632, time 190.67ms, mfu 3.19%
+iter 400: loss 2.0584, time 191.22ms, mfu 3.20%
+iter 410: loss 2.0685, time 194.14ms, mfu 3.20%
+iter 420: loss 2.0698, time 192.95ms, mfu 3.21%
+iter 430: loss 2.0527, time 191.53ms, mfu 3.21%
+iter 440: loss 2.0076, time 191.37ms, mfu 3.22%
+iter 450: loss 2.0610, time 192.50ms, mfu 3.22%
+iter 460: loss 2.0520, time 192.70ms, mfu 3.23%
+iter 470: loss 2.0118, time 192.33ms, mfu 3.23%
+iter 480: loss 1.9745, time 192.15ms, mfu 3.23%
+iter 490: loss 1.9423, time 192.30ms, mfu 3.24%
+step 500: train loss 1.9048, val loss 1.9388
+saving checkpoint to out-tt25k
+iter 500: loss 2.0220, time 21023.13ms, mfu 2.92%
+iter 510: loss 1.9775, time 193.49ms, mfu 2.95%
+iter 520: loss 1.9951, time 195.33ms, mfu 2.97%
+iter 530: loss 1.9020, time 191.59ms, mfu 3.00%
+iter 540: loss 1.9110, time 194.74ms, mfu 3.03%
+iter 550: loss 1.9173, time 192.56ms, mfu 3.05%
+iter 560: loss 1.9396, time 193.69ms, mfu 3.07%
+iter 570: loss 1.9256, time 190.11ms, mfu 3.09%
+iter 580: loss 1.8798, time 191.36ms, mfu 3.11%
+iter 590: loss 1.9327, time 191.96ms, mfu 3.13%
+iter 600: loss 1.9039, time 194.42ms, mfu 3.14%
+iter 610: loss 1.9439, time 190.47ms, mfu 3.15%
+iter 620: loss 1.8331, time 192.79ms, mfu 3.16%
+iter 630: loss 1.8012, time 192.07ms, mfu 3.17%
+iter 640: loss 1.8973, time 191.59ms, mfu 3.18%
+iter 650: loss 1.8503, time 193.39ms, mfu 3.19%
+iter 660: loss 1.8163, time 195.91ms, mfu 3.19%
+iter 670: loss 1.8031, time 195.86ms, mfu 3.19%
+iter 680: loss 1.8248, time 192.90ms, mfu 3.20%
+iter 690: loss 1.8451, time 192.22ms, mfu 3.20%
+iter 700: loss 1.7877, time 191.66ms, mfu 3.21%
+iter 710: loss 1.7792, time 192.17ms, mfu 3.22%
+iter 720: loss 1.7989, time 191.20ms, mfu 3.22%
+iter 730: loss 1.8131, time 191.74ms, mfu 3.23%
+iter 740: loss 1.7369, time 191.27ms, mfu 3.23%
+step 750: train loss 1.6959, val loss 1.7390
+saving checkpoint to out-tt25k
+iter 750: loss 1.7464, time 21103.54ms, mfu 2.91%
+iter 760: loss 1.7789, time 194.36ms, mfu 2.94%
+iter 770: loss 1.7282, time 192.90ms, mfu 2.97%
+iter 780: loss 1.7567, time 194.59ms, mfu 3.00%
+iter 790: loss 1.7391, time 193.33ms, mfu 3.02%
+iter 800: loss 1.7837, time 193.60ms, mfu 3.05%
+iter 810: loss 1.7678, time 192.14ms, mfu 3.07%
+iter 820: loss 1.7156, time 194.49ms, mfu 3.08%
+iter 830: loss 1.7034, time 195.54ms, mfu 3.10%
+iter 840: loss 1.7963, time 194.82ms, mfu 3.11%
+iter 850: loss 1.7308, time 192.52ms, mfu 3.12%
+iter 860: loss 1.7462, time 192.11ms, mfu 3.14%
+iter 870: loss 1.7222, time 191.73ms, mfu 3.15%
+iter 880: loss 1.7649, time 191.92ms, mfu 3.16%
+iter 890: loss 1.7183, time 192.88ms, mfu 3.17%
+iter 900: loss 1.6974, time 190.09ms, mfu 3.18%
+iter 910: loss 1.6938, time 189.87ms, mfu 3.20%
+iter 920: loss 1.7144, time 193.47ms, mfu 3.20%
+iter 930: loss 1.6652, time 192.54ms, mfu 3.21%
+iter 940: loss 1.7423, time 193.97ms, mfu 3.21%
+iter 950: loss 1.6979, time 192.56ms, mfu 3.21%
+iter 960: loss 1.6348, time 191.90ms, mfu 3.22%
+iter 970: loss 1.6746, time 192.47ms, mfu 3.22%
+iter 980: loss 1.6480, time 195.60ms, mfu 3.22%
+iter 990: loss 1.7538, time 193.67ms, mfu 3.22%
+step 1000: train loss 1.5711, val loss 1.6319
+saving checkpoint to out-tt25k
+iter 1000: loss 1.6878, time 21104.45ms, mfu 2.90%
+iter 1010: loss 1.6146, time 194.17ms, mfu 2.94%
+iter 1020: loss 1.6430, time 195.50ms, mfu 2.96%
+iter 1030: loss 1.6274, time 191.47ms, mfu 2.99%
+iter 1040: loss 1.6027, time 189.15ms, mfu 3.03%
+iter 1050: loss 1.6380, time 191.80ms, mfu 3.05%
+iter 1060: loss 1.6786, time 194.80ms, mfu 3.07%
+iter 1070: loss 1.6108, time 191.82ms, mfu 3.09%
+iter 1080: loss 1.6264, time 188.41ms, mfu 3.11%
+iter 1090: loss 1.5982, time 193.96ms, mfu 3.12%
+iter 1100: loss 1.6302, time 190.96ms, mfu 3.14%
+iter 1110: loss 1.5526, time 194.99ms, mfu 3.15%
+iter 1120: loss 1.6411, time 193.58ms, mfu 3.16%
+iter 1130: loss 1.6356, time 194.22ms, mfu 3.16%
+iter 1140: loss 1.5503, time 191.38ms, mfu 3.18%
+iter 1150: loss 1.5788, time 190.99ms, mfu 3.19%
+iter 1160: loss 1.6330, time 194.94ms, mfu 3.19%
+iter 1170: loss 1.6857, time 192.58ms, mfu 3.20%
+iter 1180: loss 1.5792, time 192.39ms, mfu 3.20%
+iter 1190: loss 1.6184, time 192.85ms, mfu 3.21%
+iter 1200: loss 1.5777, time 192.45ms, mfu 3.21%
+iter 1210: loss 1.6037, time 189.03ms, mfu 3.22%
+iter 1220: loss 1.5744, time 192.65ms, mfu 3.23%
+iter 1230: loss 1.5879, time 192.06ms, mfu 3.23%
+iter 1240: loss 1.5424, time 193.53ms, mfu 3.23%
+step 1250: train loss 1.4979, val loss 1.5718
+saving checkpoint to out-tt25k
+iter 1250: loss 1.5312, time 21086.57ms, mfu 2.91%
+iter 1260: loss 1.5661, time 197.68ms, mfu 2.94%
+iter 1270: loss 1.5211, time 190.25ms, mfu 2.97%
+iter 1280: loss 1.5691, time 192.38ms, mfu 3.00%
+iter 1290: loss 1.5692, time 194.84ms, mfu 3.02%
+iter 1300: loss 1.5678, time 193.57ms, mfu 3.05%
+iter 1310: loss 1.5438, time 195.49ms, mfu 3.06%
+iter 1320: loss 1.5988, time 195.81ms, mfu 3.08%
+iter 1330: loss 1.5532, time 191.86ms, mfu 3.10%
+iter 1340: loss 1.5531, time 188.88ms, mfu 3.12%
+iter 1350: loss 1.5146, time 192.24ms, mfu 3.13%
+iter 1360: loss 1.5758, time 190.39ms, mfu 3.15%
+iter 1370: loss 1.5947, time 191.23ms, mfu 3.16%
+iter 1380: loss 1.5581, time 193.58ms, mfu 3.17%
+iter 1390: loss 1.5220, time 192.25ms, mfu 3.18%
+iter 1400: loss 1.5901, time 192.55ms, mfu 3.19%
+iter 1410: loss 1.4610, time 194.28ms, mfu 3.19%
+iter 1420: loss 1.5530, time 191.12ms, mfu 3.20%
+iter 1430: loss 1.5195, time 192.43ms, mfu 3.21%
+iter 1440: loss 1.5572, time 193.74ms, mfu 3.21%
+iter 1450: loss 1.5474, time 192.92ms, mfu 3.21%
+iter 1460: loss 1.5212, time 193.17ms, mfu 3.22%
+iter 1470: loss 1.5322, time 193.06ms, mfu 3.22%
+iter 1480: loss 1.5194, time 191.42ms, mfu 3.23%
+iter 1490: loss 1.5542, time 190.33ms, mfu 3.23%
+step 1500: train loss 1.4320, val loss 1.5221
+saving checkpoint to out-tt25k
+iter 1500: loss 1.5151, time 21031.38ms, mfu 2.91%
+iter 1510: loss 1.4869, time 192.30ms, mfu 2.95%
+iter 1520: loss 1.4880, time 189.02ms, mfu 2.98%
+iter 1530: loss 1.4669, time 193.25ms, mfu 3.01%
+iter 1540: loss 1.4836, time 190.02ms, mfu 3.04%
+iter 1550: loss 1.4516, time 193.79ms, mfu 3.06%
+iter 1560: loss 1.5057, time 194.77ms, mfu 3.08%
+iter 1570: loss 1.5000, time 196.48ms, mfu 3.09%
+iter 1580: loss 1.4372, time 191.23ms, mfu 3.11%
+iter 1590: loss 1.4906, time 194.86ms, mfu 3.12%
+iter 1600: loss 1.5686, time 194.31ms, mfu 3.13%
+iter 1610: loss 1.4488, time 191.75ms, mfu 3.14%
+iter 1620: loss 1.4273, time 194.66ms, mfu 3.15%
+iter 1630: loss 1.4511, time 193.89ms, mfu 3.16%
+iter 1640: loss 1.5315, time 191.34ms, mfu 3.17%
+iter 1650: loss 1.4043, time 189.44ms, mfu 3.18%
+iter 1660: loss 1.4702, time 192.21ms, mfu 3.19%
+iter 1670: loss 1.4442, time 191.12ms, mfu 3.20%
+iter 1680: loss 1.4823, time 193.84ms, mfu 3.21%
+iter 1690: loss 1.4405, time 193.22ms, mfu 3.21%
+iter 1700: loss 1.4714, time 192.32ms, mfu 3.21%
+iter 1710: loss 1.4444, time 193.10ms, mfu 3.22%
+iter 1720: loss 1.4555, time 193.27ms, mfu 3.22%
+iter 1730: loss 1.4140, time 192.94ms, mfu 3.22%
+iter 1740: loss 1.3669, time 192.83ms, mfu 3.23%
+step 1750: train loss 1.3756, val loss 1.4729
+saving checkpoint to out-tt25k
+iter 1750: loss 1.4519, time 21095.65ms, mfu 2.91%
+iter 1760: loss 1.4715, time 197.08ms, mfu 2.93%
+iter 1770: loss 1.4555, time 194.18ms, mfu 2.96%
+iter 1780: loss 1.4400, time 190.39ms, mfu 3.00%
+iter 1790: loss 1.4388, time 190.83ms, mfu 3.03%
+iter 1800: loss 1.4541, time 195.55ms, mfu 3.04%
+iter 1810: loss 1.3824, time 192.91ms, mfu 3.06%
+iter 1820: loss 1.4350, time 191.17ms, mfu 3.09%
+iter 1830: loss 1.4710, time 190.80ms, mfu 3.11%
+iter 1840: loss 1.4165, time 190.81ms, mfu 3.12%
+iter 1850: loss 1.4417, time 190.87ms, mfu 3.14%
+iter 1860: loss 1.4460, time 191.76ms, mfu 3.15%
+iter 1870: loss 1.4146, time 192.54ms, mfu 3.16%
+iter 1880: loss 1.4733, time 191.61ms, mfu 3.18%
+iter 1890: loss 1.4086, time 193.18ms, mfu 3.18%
+iter 1900: loss 1.3610, time 195.98ms, mfu 3.18%
+iter 1910: loss 1.3954, time 190.98ms, mfu 3.19%
+iter 1920: loss 1.4568, time 190.85ms, mfu 3.20%
+iter 1930: loss 1.3917, time 189.13ms, mfu 3.21%
+iter 1940: loss 1.3905, time 192.40ms, mfu 3.22%
+iter 1950: loss 1.3902, time 188.27ms, mfu 3.23%
+iter 1960: loss 1.4497, time 194.43ms, mfu 3.23%
+iter 1970: loss 1.3819, time 192.97ms, mfu 3.23%
+iter 1980: loss 1.4063, time 192.74ms, mfu 3.23%
+iter 1990: loss 1.4170, time 194.89ms, mfu 3.23%
+step 2000: train loss 1.3332, val loss 1.4389
+saving checkpoint to out-tt25k
+iter 2000: loss 1.4283, time 20962.65ms, mfu 2.91%
+iter 2010: loss 1.4423, time 192.79ms, mfu 2.95%
+iter 2020: loss 1.3891, time 196.21ms, mfu 2.97%
+iter 2030: loss 1.3543, time 193.46ms, mfu 3.00%
+iter 2040: loss 1.4023, time 191.57ms, mfu 3.03%
+iter 2050: loss 1.4414, time 191.18ms, mfu 3.05%
+iter 2060: loss 1.3455, time 193.85ms, mfu 3.07%
+iter 2070: loss 1.4412, time 195.68ms, mfu 3.08%
+iter 2080: loss 1.3676, time 194.53ms, mfu 3.10%
+iter 2090: loss 1.3605, time 190.77ms, mfu 3.12%
+iter 2100: loss 1.4006, time 196.61ms, mfu 3.12%
+iter 2110: loss 1.4091, time 190.52ms, mfu 3.14%
+iter 2120: loss 1.3385, time 193.78ms, mfu 3.15%
+iter 2130: loss 1.3895, time 192.77ms, mfu 3.16%
+iter 2140: loss 1.3543, time 193.73ms, mfu 3.17%
+iter 2150: loss 1.3632, time 193.60ms, mfu 3.18%
+iter 2160: loss 1.3763, time 193.00ms, mfu 3.18%
+iter 2170: loss 1.3676, time 192.79ms, mfu 3.19%
+iter 2180: loss 1.3544, time 187.65ms, mfu 3.21%
+iter 2190: loss 1.3539, time 190.93ms, mfu 3.21%
+iter 2200: loss 1.3838, time 193.65ms, mfu 3.22%
+iter 2210: loss 1.3810, time 192.03ms, mfu 3.22%
+iter 2220: loss 1.3186, time 192.89ms, mfu 3.22%
+iter 2230: loss 1.3657, time 194.10ms, mfu 3.22%
+iter 2240: loss 1.3651, time 188.53ms, mfu 3.23%
+step 2250: train loss 1.2922, val loss 1.4169
+saving checkpoint to out-tt25k
+iter 2250: loss 1.3520, time 21072.08ms, mfu 2.91%
+iter 2260: loss 1.3642, time 200.40ms, mfu 2.94%
+iter 2270: loss 1.3604, time 196.62ms, mfu 2.96%
+iter 2280: loss 1.3044, time 193.64ms, mfu 2.99%
+iter 2290: loss 1.3586, time 189.18ms, mfu 3.02%
+iter 2300: loss 1.3370, time 191.92ms, mfu 3.05%
+iter 2310: loss 1.3756, time 190.50ms, mfu 3.07%
+iter 2320: loss 1.3727, time 190.82ms, mfu 3.09%
+iter 2330: loss 1.3496, time 192.51ms, mfu 3.11%
+iter 2340: loss 1.3772, time 192.53ms, mfu 3.12%
+iter 2350: loss 1.3726, time 192.92ms, mfu 3.14%
+iter 2360: loss 1.3415, time 194.32ms, mfu 3.15%
+iter 2370: loss 1.3345, time 193.27ms, mfu 3.16%
+iter 2380: loss 1.3029, time 192.12ms, mfu 3.17%
+iter 2390: loss 1.3451, time 192.94ms, mfu 3.18%
+iter 2400: loss 1.3485, time 194.52ms, mfu 3.18%
+iter 2410: loss 1.3442, time 193.01ms, mfu 3.19%
+iter 2420: loss 1.3832, time 191.92ms, mfu 3.20%
+iter 2430: loss 1.3210, time 188.48ms, mfu 3.21%
+iter 2440: loss 1.3876, time 192.67ms, mfu 3.21%
+iter 2450: loss 1.3483, time 192.69ms, mfu 3.22%
+iter 2460: loss 1.3076, time 192.80ms, mfu 3.22%
+iter 2470: loss 1.3516, time 192.57ms, mfu 3.22%
+iter 2480: loss 1.3513, time 191.06ms, mfu 3.23%
+iter 2490: loss 1.3213, time 192.55ms, mfu 3.23%
+step 2500: train loss 1.2700, val loss 1.3990
+saving checkpoint to out-tt25k
+iter 2500: loss 1.3440, time 21085.91ms, mfu 2.91%
+iter 2510: loss 1.3270, time 193.36ms, mfu 2.95%
+iter 2520: loss 1.3194, time 192.58ms, mfu 2.98%
+iter 2530: loss 1.3861, time 190.98ms, mfu 3.01%
+iter 2540: loss 1.3123, time 191.24ms, mfu 3.03%
+iter 2550: loss 1.2944, time 193.63ms, mfu 3.06%
+iter 2560: loss 1.2739, time 193.30ms, mfu 3.07%
+iter 2570: loss 1.3366, time 191.34ms, mfu 3.09%
+iter 2580: loss 1.3176, time 191.16ms, mfu 3.11%
+iter 2590: loss 1.3218, time 190.62ms, mfu 3.13%
+iter 2600: loss 1.3085, time 192.80ms, mfu 3.14%
+iter 2610: loss 1.3729, time 188.59ms, mfu 3.16%
+iter 2620: loss 1.3570, time 191.36ms, mfu 3.17%
+iter 2630: loss 1.3108, time 190.70ms, mfu 3.18%
+iter 2640: loss 1.3576, time 192.33ms, mfu 3.19%
+iter 2650: loss 1.3250, time 193.49ms, mfu 3.20%
+iter 2660: loss 1.3139, time 193.16ms, mfu 3.20%
+iter 2670: loss 1.2909, time 191.87ms, mfu 3.21%
+iter 2680: loss 1.3198, time 190.60ms, mfu 3.22%
+iter 2690: loss 1.3093, time 191.54ms, mfu 3.22%
+iter 2700: loss 1.2846, time 193.89ms, mfu 3.22%
+iter 2710: loss 1.3451, time 190.98ms, mfu 3.23%
+iter 2720: loss 1.2945, time 189.74ms, mfu 3.24%
+iter 2730: loss 1.2637, time 190.36ms, mfu 3.24%
+iter 2740: loss 1.2950, time 192.32ms, mfu 3.25%
+step 2750: train loss 1.2390, val loss 1.3855
+saving checkpoint to out-tt25k
+iter 2750: loss 1.3135, time 21037.76ms, mfu 2.92%
+iter 2760: loss 1.3049, time 194.38ms, mfu 2.95%
+iter 2770: loss 1.2899, time 187.51ms, mfu 2.99%
+iter 2780: loss 1.2795, time 188.43ms, mfu 3.03%
+iter 2790: loss 1.3074, time 188.33ms, mfu 3.06%
+iter 2800: loss 1.2744, time 189.76ms, mfu 3.08%
+iter 2810: loss 1.2995, time 191.73ms, mfu 3.10%
+iter 2820: loss 1.2822, time 192.60ms, mfu 3.12%
+iter 2830: loss 1.3317, time 192.68ms, mfu 3.13%
+iter 2840: loss 1.3286, time 192.51ms, mfu 3.14%
+iter 2850: loss 1.3015, time 192.45ms, mfu 3.15%
+iter 2860: loss 1.2998, time 193.20ms, mfu 3.16%
+iter 2870: loss 1.2841, time 193.05ms, mfu 3.17%
+iter 2880: loss 1.3351, time 195.40ms, mfu 3.18%
+iter 2890: loss 1.3015, time 195.02ms, mfu 3.18%
+iter 2900: loss 1.2921, time 188.83ms, mfu 3.19%
+iter 2910: loss 1.2523, time 192.37ms, mfu 3.20%
+iter 2920: loss 1.2892, time 191.27ms, mfu 3.21%
+iter 2930: loss 1.2827, time 191.10ms, mfu 3.22%
+iter 2940: loss 1.2790, time 190.28ms, mfu 3.22%
+iter 2950: loss 1.2892, time 194.21ms, mfu 3.22%
+iter 2960: loss 1.3203, time 192.26ms, mfu 3.23%
+iter 2970: loss 1.2906, time 194.04ms, mfu 3.23%
+iter 2980: loss 1.2921, time 193.64ms, mfu 3.23%
+iter 2990: loss 1.2522, time 193.83ms, mfu 3.23%
+step 3000: train loss 1.2149, val loss 1.3788
+saving checkpoint to out-tt25k
+iter 3000: loss 1.2939, time 21109.72ms, mfu 2.91%
+iter 3010: loss 1.2498, time 196.03ms, mfu 2.94%
+iter 3020: loss 1.2518, time 191.80ms, mfu 2.97%
+iter 3030: loss 1.2837, time 188.90ms, mfu 3.01%
+iter 3040: loss 1.2638, time 193.60ms, mfu 3.03%
+iter 3050: loss 1.2758, time 192.44ms, mfu 3.05%
+iter 3060: loss 1.2718, time 190.78ms, mfu 3.08%
+iter 3070: loss 1.2460, time 192.01ms, mfu 3.10%
+iter 3080: loss 1.3092, time 195.22ms, mfu 3.11%
+iter 3090: loss 1.2609, time 193.35ms, mfu 3.12%
+iter 3100: loss 1.2683, time 192.58ms, mfu 3.13%
+iter 3110: loss 1.2626, time 193.76ms, mfu 3.14%
+iter 3120: loss 1.2647, time 188.73ms, mfu 3.16%
+iter 3130: loss 1.2864, time 191.15ms, mfu 3.17%
+iter 3140: loss 1.2575, time 190.51ms, mfu 3.19%
+iter 3150: loss 1.2682, time 192.29ms, mfu 3.19%
+iter 3160: loss 1.2994, time 193.13ms, mfu 3.20%
+iter 3170: loss 1.2297, time 193.40ms, mfu 3.20%
+iter 3180: loss 1.2353, time 191.84ms, mfu 3.21%
+iter 3190: loss 1.2718, time 192.76ms, mfu 3.21%
+iter 3200: loss 1.2306, time 193.19ms, mfu 3.22%
+iter 3210: loss 1.2272, time 190.02ms, mfu 3.23%
+iter 3220: loss 1.2395, time 192.12ms, mfu 3.23%
+iter 3230: loss 1.2835, time 190.62ms, mfu 3.24%
+iter 3240: loss 1.2882, time 191.51ms, mfu 3.24%
+step 3250: train loss 1.1923, val loss 1.3720
+saving checkpoint to out-tt25k
+iter 3250: loss 1.2453, time 21004.76ms, mfu 2.92%
+iter 3260: loss 1.2603, time 195.55ms, mfu 2.95%
+iter 3270: loss 1.2827, time 198.50ms, mfu 2.97%
+iter 3280: loss 1.2345, time 196.67ms, mfu 2.99%
+iter 3290: loss 1.2928, time 193.02ms, mfu 3.02%
+iter 3300: loss 1.2434, time 191.76ms, mfu 3.04%
+iter 3310: loss 1.2561, time 194.80ms, mfu 3.06%
+iter 3320: loss 1.2574, time 193.59ms, mfu 3.08%
+iter 3330: loss 1.1806, time 192.99ms, mfu 3.10%
+iter 3340: loss 1.2325, time 195.32ms, mfu 3.11%
+iter 3350: loss 1.2766, time 190.29ms, mfu 3.13%
+iter 3360: loss 1.2595, time 191.67ms, mfu 3.14%
+iter 3370: loss 1.2749, time 192.51ms, mfu 3.15%
+iter 3380: loss 1.2350, time 193.09ms, mfu 3.16%
+iter 3390: loss 1.2742, time 190.78ms, mfu 3.17%
+iter 3400: loss 1.2869, time 193.44ms, mfu 3.18%
+iter 3410: loss 1.2316, time 193.70ms, mfu 3.19%
+iter 3420: loss 1.2613, time 194.88ms, mfu 3.19%
+iter 3430: loss 1.2598, time 194.05ms, mfu 3.19%
+iter 3440: loss 1.2231, time 191.59ms, mfu 3.20%
+iter 3450: loss 1.2506, time 192.16ms, mfu 3.21%
+iter 3460: loss 1.2718, time 194.26ms, mfu 3.21%
+iter 3470: loss 1.2143, time 192.61ms, mfu 3.21%
+iter 3480: loss 1.2284, time 194.30ms, mfu 3.22%
+iter 3490: loss 1.2311, time 189.01ms, mfu 3.23%
+step 3500: train loss 1.1721, val loss 1.3601
+saving checkpoint to out-tt25k
+iter 3500: loss 1.2753, time 20860.48ms, mfu 2.91%
+iter 3510: loss 1.1775, time 192.27ms, mfu 2.94%
+iter 3520: loss 1.1978, time 195.15ms, mfu 2.97%
+iter 3530: loss 1.2083, time 191.01ms, mfu 3.00%
+iter 3540: loss 1.2730, time 192.41ms, mfu 3.03%
+iter 3550: loss 1.2526, time 192.47ms, mfu 3.05%
+iter 3560: loss 1.2274, time 192.15ms, mfu 3.07%
+iter 3570: loss 1.2204, time 189.16ms, mfu 3.10%
+iter 3580: loss 1.2744, time 194.09ms, mfu 3.11%
+iter 3590: loss 1.2370, time 192.27ms, mfu 3.12%
+iter 3600: loss 1.2541, time 194.30ms, mfu 3.14%
+iter 3610: loss 1.2279, time 191.94ms, mfu 3.15%
+iter 3620: loss 1.2959, time 195.18ms, mfu 3.15%
+iter 3630: loss 1.2494, time 192.59ms, mfu 3.17%
+iter 3640: loss 1.2473, time 193.62ms, mfu 3.17%
+iter 3650: loss 1.2410, time 191.74ms, mfu 3.18%
+iter 3660: loss 1.2203, time 188.73ms, mfu 3.20%
+iter 3670: loss 1.2195, time 193.11ms, mfu 3.20%
+iter 3680: loss 1.2262, time 192.41ms, mfu 3.21%
+iter 3690: loss 1.2479, time 193.20ms, mfu 3.21%
+iter 3700: loss 1.2811, time 189.95ms, mfu 3.22%
+iter 3710: loss 1.2396, time 193.31ms, mfu 3.22%
+iter 3720: loss 1.2418, time 194.68ms, mfu 3.22%
+iter 3730: loss 1.2549, time 192.02ms, mfu 3.23%
+iter 3740: loss 1.2272, time 196.04ms, mfu 3.22%
+step 3750: train loss 1.1521, val loss 1.3596
+saving checkpoint to out-tt25k
+iter 3750: loss 1.2348, time 21058.04ms, mfu 2.90%
+iter 3760: loss 1.2444, time 195.28ms, mfu 2.94%
+iter 3770: loss 1.2126, time 193.00ms, mfu 2.97%
+iter 3780: loss 1.2198, time 192.04ms, mfu 3.00%
+iter 3790: loss 1.2424, time 191.75ms, mfu 3.02%
+iter 3800: loss 1.2431, time 190.40ms, mfu 3.05%
+iter 3810: loss 1.2145, time 191.04ms, mfu 3.07%
+iter 3820: loss 1.2379, time 187.93ms, mfu 3.10%
+iter 3830: loss 1.2310, time 192.83ms, mfu 3.12%
+iter 3840: loss 1.2158, time 192.46ms, mfu 3.13%
+iter 3850: loss 1.2258, time 190.02ms, mfu 3.15%
+iter 3860: loss 1.1901, time 193.33ms, mfu 3.16%
+iter 3870: loss 1.2249, time 191.99ms, mfu 3.17%
+iter 3880: loss 1.2517, time 191.63ms, mfu 3.18%
+iter 3890: loss 1.2103, time 193.58ms, mfu 3.18%
+iter 3900: loss 1.2138, time 192.37ms, mfu 3.19%
+iter 3910: loss 1.1794, time 194.64ms, mfu 3.20%
+iter 3920: loss 1.2480, time 195.26ms, mfu 3.20%
+iter 3930: loss 1.2438, time 191.25ms, mfu 3.21%
+iter 3940: loss 1.2337, time 193.46ms, mfu 3.21%
+iter 3950: loss 1.2056, time 190.66ms, mfu 3.22%
+iter 3960: loss 1.2099, time 192.41ms, mfu 3.22%
+iter 3970: loss 1.2081, time 190.86ms, mfu 3.23%
+iter 3980: loss 1.1927, time 192.15ms, mfu 3.23%
+iter 3990: loss 1.2033, time 193.61ms, mfu 3.23%
+step 4000: train loss 1.1345, val loss 1.3562
+saving checkpoint to out-tt25k
+iter 4000: loss 1.1961, time 20988.32ms, mfu 2.91%
+iter 4010: loss 1.2230, time 190.36ms, mfu 2.95%
+iter 4020: loss 1.1954, time 191.82ms, mfu 2.98%
+iter 4030: loss 1.2113, time 195.72ms, mfu 3.00%
+iter 4040: loss 1.1814, time 190.07ms, mfu 3.03%
+iter 4050: loss 1.1838, time 191.48ms, mfu 3.06%
+iter 4060: loss 1.2062, time 192.96ms, mfu 3.08%
+iter 4070: loss 1.1951, time 192.93ms, mfu 3.09%
+iter 4080: loss 1.1673, time 194.16ms, mfu 3.11%
+iter 4090: loss 1.2020, time 193.39ms, mfu 3.12%
+iter 4100: loss 1.2580, time 190.42ms, mfu 3.14%
+iter 4110: loss 1.1939, time 193.45ms, mfu 3.15%
+iter 4120: loss 1.1772, time 191.80ms, mfu 3.16%
+iter 4130: loss 1.2002, time 191.45ms, mfu 3.17%
+iter 4140: loss 1.1967, time 191.47ms, mfu 3.18%
+iter 4150: loss 1.1753, time 189.91ms, mfu 3.20%
+iter 4160: loss 1.1796, time 190.64ms, mfu 3.20%
+iter 4170: loss 1.2094, time 191.79ms, mfu 3.21%
+iter 4180: loss 1.2195, time 193.68ms, mfu 3.21%
+iter 4190: loss 1.2159, time 192.64ms, mfu 3.22%
+iter 4200: loss 1.2373, time 193.70ms, mfu 3.22%
+iter 4210: loss 1.1836, time 194.07ms, mfu 3.22%
+iter 4220: loss 1.2008, time 190.85ms, mfu 3.23%
+iter 4230: loss 1.1743, time 194.40ms, mfu 3.23%
+iter 4240: loss 1.2458, time 192.53ms, mfu 3.23%
+step 4250: train loss 1.1266, val loss 1.3546
+saving checkpoint to out-tt25k
+iter 4250: loss 1.2041, time 20880.29ms, mfu 2.91%
+iter 4260: loss 1.2210, time 196.76ms, mfu 2.94%
+iter 4270: loss 1.2008, time 190.38ms, mfu 2.97%
+iter 4280: loss 1.1903, time 185.48ms, mfu 3.01%
+iter 4290: loss 1.2200, time 192.55ms, mfu 3.04%
+iter 4300: loss 1.2110, time 191.90ms, mfu 3.06%
+iter 4310: loss 1.1913, time 190.15ms, mfu 3.09%
+iter 4320: loss 1.2038, time 188.88ms, mfu 3.11%
+iter 4330: loss 1.1497, time 190.00ms, mfu 3.13%
+iter 4340: loss 1.2076, time 191.90ms, mfu 3.14%
+iter 4350: loss 1.1985, time 194.76ms, mfu 3.15%
+iter 4360: loss 1.1902, time 191.36ms, mfu 3.16%
+iter 4370: loss 1.2046, time 192.81ms, mfu 3.17%
+iter 4380: loss 1.2040, time 192.04ms, mfu 3.18%
+iter 4390: loss 1.1939, time 195.14ms, mfu 3.18%
+iter 4400: loss 1.1914, time 192.92ms, mfu 3.19%
+iter 4410: loss 1.1695, time 196.13ms, mfu 3.19%
+iter 4420: loss 1.2057, time 192.53ms, mfu 3.20%
+iter 4430: loss 1.1956, time 195.15ms, mfu 3.20%
+iter 4440: loss 1.2006, time 194.77ms, mfu 3.20%
+iter 4450: loss 1.1496, time 192.16ms, mfu 3.21%
+iter 4460: loss 1.1892, time 192.72ms, mfu 3.21%
+iter 4470: loss 1.1664, time 191.82ms, mfu 3.22%
+iter 4480: loss 1.2156, time 195.82ms, mfu 3.22%
+iter 4490: loss 1.2006, time 192.41ms, mfu 3.22%
+step 4500: train loss 1.1141, val loss 1.3570
+iter 4500: loss 1.1825, time 19583.26ms, mfu 2.90%
+iter 4510: loss 1.1354, time 196.68ms, mfu 2.93%
+iter 4520: loss 1.1576, time 195.91ms, mfu 2.96%
+iter 4530: loss 1.1463, time 191.56ms, mfu 2.99%
+iter 4540: loss 1.1901, time 191.25ms, mfu 3.02%
+iter 4550: loss 1.1490, time 190.83ms, mfu 3.05%
+iter 4560: loss 1.1552, time 191.19ms, mfu 3.07%
+iter 4570: loss 1.1530, time 193.42ms, mfu 3.09%
+iter 4580: loss 1.2008, time 192.13ms, mfu 3.10%
+iter 4590: loss 1.2109, time 189.38ms, mfu 3.12%
+iter 4600: loss 1.1693, time 193.81ms, mfu 3.14%
+iter 4610: loss 1.1830, time 197.04ms, mfu 3.14%
+iter 4620: loss 1.1944, time 192.49ms, mfu 3.15%
+iter 4630: loss 1.1734, time 193.68ms, mfu 3.16%
+iter 4640: loss 1.1846, time 190.66ms, mfu 3.17%
+iter 4650: loss 1.1597, time 193.82ms, mfu 3.18%
+iter 4660: loss 1.1860, time 192.11ms, mfu 3.19%
+iter 4670: loss 1.1737, time 192.26ms, mfu 3.20%
+iter 4680: loss 1.1500, time 190.60ms, mfu 3.21%
+iter 4690: loss 1.1957, time 194.81ms, mfu 3.21%
+iter 4700: loss 1.1334, time 191.04ms, mfu 3.21%
+iter 4710: loss 1.1832, time 195.16ms, mfu 3.21%
+iter 4720: loss 1.1908, time 195.52ms, mfu 3.21%
+iter 4730: loss 1.1871, time 190.92ms, mfu 3.22%
+iter 4740: loss 1.2224, time 192.45ms, mfu 3.22%
+step 4750: train loss 1.1043, val loss 1.3534
+saving checkpoint to out-tt25k
+iter 4750: loss 1.1678, time 21047.15ms, mfu 2.91%
+iter 4760: loss 1.1626, time 198.71ms, mfu 2.93%
+iter 4770: loss 1.1719, time 192.05ms, mfu 2.96%
+iter 4780: loss 1.1620, time 192.65ms, mfu 2.99%
+iter 4790: loss 1.1629, time 194.28ms, mfu 3.02%
+iter 4800: loss 1.2255, time 188.93ms, mfu 3.05%
+iter 4810: loss 1.1884, time 193.69ms, mfu 3.07%
+iter 4820: loss 1.1395, time 192.39ms, mfu 3.09%
+iter 4830: loss 1.1867, time 192.34ms, mfu 3.10%
+iter 4840: loss 1.1777, time 190.40ms, mfu 3.12%
+iter 4850: loss 1.1693, time 190.50ms, mfu 3.14%
+iter 4860: loss 1.2085, time 193.66ms, mfu 3.15%
+iter 4870: loss 1.1385, time 192.12ms, mfu 3.16%
+iter 4880: loss 1.2096, time 194.57ms, mfu 3.17%
+iter 4890: loss 1.2103, time 191.44ms, mfu 3.18%
+iter 4900: loss 1.1405, time 189.21ms, mfu 3.19%
+iter 4910: loss 1.1638, time 190.61ms, mfu 3.20%
+iter 4920: loss 1.1447, time 192.17ms, mfu 3.21%
+iter 4930: loss 1.1434, time 191.91ms, mfu 3.21%
+iter 4940: loss 1.1604, time 192.77ms, mfu 3.22%
+iter 4950: loss 1.1899, time 193.10ms, mfu 3.22%
+iter 4960: loss 1.1435, time 194.89ms, mfu 3.22%
+iter 4970: loss 1.1792, time 194.40ms, mfu 3.22%
+iter 4980: loss 1.1743, time 191.70ms, mfu 3.23%
+iter 4990: loss 1.1450, time 193.74ms, mfu 3.23%
+step 5000: train loss 1.0955, val loss 1.3533
+saving checkpoint to out-tt25k
+iter 5000: loss 1.1494, time 20982.20ms, mfu 2.91%
