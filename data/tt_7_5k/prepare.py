@@ -10,7 +10,7 @@ import requests
 import numpy as np
 import argparse
 
-input_file_path = os.path.join(os.path.dirname(__file__), "tt_7_5k.txt")
+input_file_path = os.path.join(os.path.dirname(__file__), "tt_7_5k_filtered.txt")
 
 with open(input_file_path, 'r') as f:
     data = f.read()
