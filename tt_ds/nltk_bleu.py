@@ -2,6 +2,7 @@ import nltk
 from nltk.tokenize import word_tokenize
 from nltk.translate.bleu_score import sentence_bleu
 import os
+import sys
 
 nltk.download('punkt')
 
@@ -25,8 +26,8 @@ def calculate_bleu_score(reference_list, candidate_list):
     return bleu_score
 
 if __name__ == "__main__":
-    candidate_file = argv[1]  # Replace with your reference file path
-    reference_file = "../data/" + argv[2]  # Replace with your candidate file path
+    candidate_file = sys.argv[1]  # Replace with your reference file path
+    reference_file = "../data/" + sys.argv[2]  # Replace with your candidate file path
 
     ref_lines = read_file(reference_file)
     candidate_lines = read_file(candidate_file)
