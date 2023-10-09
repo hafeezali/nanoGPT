@@ -7,15 +7,17 @@ nltk.download('punkt')
 
 def read_file(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
-        return file.read()
+        return file.readlines()
 
-def calculate_bleu_score(reference_file, candidate_file):
-    reference_text = read_file(reference_file)
-    candidate_text = read_file(candidate_file)
-
+def calculate_bleu_score(reference_list, candidate_list):
     # Tokenize the reference and candidate texts
-    reference_tokens = word_tokenize(reference_text.lower())
-    candidate_tokens = word_tokenize(candidate_text.lower())
+    reference_tokens = []
+    for line in reference_list:
+        reference_tokens.extend(word_tokenize(line.lower()))
+
+    candidate_tokens = []
+    for line in candidate_list:
+        candidate_tokens.extend(word_tokenize(line.lower()))
 
     # Calculate BLEU score
     bleu_score = sentence_bleu([reference_tokens], candidate_tokens)
@@ -23,11 +25,18 @@ def calculate_bleu_score(reference_file, candidate_file):
     return bleu_score
 
 if __name__ == "__main__":
-    reference_file = "2l12h/sample.txt"  # Replace with your reference file path
-    candidate_file = "../data/shakespeare_char/input.txt"  # Replace with your candidate file path
+    candidate_file = "4l8h/sample.txt"  # Replace with your reference file path
+    reference_file = "../data/shakespeare_char/input.txt"  # Replace with your candidate file path
 
-    if not os.path.exists(reference_file) or not os.path.exists(candidate_file):
-        print("Reference or candidate file not found.")
-    else:
-        bleu_score = calculate_bleu_score(reference_file, candidate_file)
-        print(f"BLEU Score: {bleu_score:.4f}")
+    ref_lines = read_file(reference_file)
+    candidate_lines = read_file(candidate_file)
+
+    total_bleu_score = 0.0
+    total_samples = 0
+
+    for i in range(0, len(ref_lines), len(candidate_lines)):
+        total_samples = total_samples + 1
+        total_bleu_score = total_bleu_score + calculate_bleu_score(ref_lines[i:i+len(candidate_lines)], candidate_lines)
+
+    bleu_score = total_bleu_score / total_samples
+    print(f"BLEU Score: {bleu_score:.4f}")
