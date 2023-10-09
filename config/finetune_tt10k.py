@@ -1,6 +1,6 @@
 import time
 
-out_dir = 'out-ft10k'
+out_dir = 'out-shakespeare-char-4l8h-ft'
 eval_interval = 5
 eval_iters = 40
 wandb_log = False # feel free to turn on
@@ -8,7 +8,7 @@ wandb_project = 'ft10k-char'
 wandb_run_name = 'ft-' + str(time.time())
 
 dataset = 'tt_10k'
-init_from = 'out-shakespeare-char-4l8h-ft' # this is the largest GPT-2 model
+init_from = 'resume' # this is the largest GPT-2 model
 
 # only save checkpoints if the validation loss improves
 always_save_checkpoint = False
